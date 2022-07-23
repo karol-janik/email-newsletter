@@ -20,9 +20,11 @@ DB_PASSWORD="${POSTGRES_PASSWORD:=password}"
 # Check if a custom database name has been set, otherwise default to 'newsletter'
 DB_NAME="${POSTGRES_DB:=newsletter}"
 # Check if a custom port has been set, otherwise default to '5432'
-DB_PORT="${POSTGRES_PORT:=5433}"
+DB_PORT="${POSTGRES_PORT:=5434}"
 
 # Lunch postgres using Docker
+if [[ -z "${SKIP_DOCKER}" ]]
+ then
 docker run \
     -e POSTGRES_USER=${DB_USER} \
     -e POSTGRES_PASSWORD=${DB_PASSWORD} \
@@ -31,6 +33,7 @@ docker run \
     -d postgres \
     postgres -N 1000
     # ^ Increased maximum number of connections for testing purposes
+fi
 
 export PGPASSWORD="${DB_PASSWORD}"
 until psql -h "localhost" -U "${DB_USER}" -p "${DB_PORT}" -d "postgres" -c '\q'; do
@@ -40,3 +43,4 @@ done
 
 export DATABASE_URL=postgres://${DB_USER}:${DB_PASSWORD}@localhost:${DB_PORT}/${DB_NAME}
 sqlx database create
+sqlx migrate run
