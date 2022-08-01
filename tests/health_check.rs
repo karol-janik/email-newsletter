@@ -1,5 +1,7 @@
 use std::net::TcpListener;
 
+use newsletter::startup::run;
+
 // Inspect what code gets generated using:
 // `cargo expand --test health_check`
 #[actix_web::test]
@@ -24,7 +26,7 @@ async fn health_check_works() {
 fn spawn_app() -> String {
     let listener = TcpListener::bind("127.0.0.1:0").expect("Failed to bind random port");
     let port = listener.local_addr().unwrap().port();
-    let server = newsletter::run(listener).expect("Failed to bind address");
+    let server = run(listener).expect("Failed to bind address");
     // Lunch the server as a background task
     let _ = tokio::spawn(server);
     format!("http://127.0.0.1:{}", port)
