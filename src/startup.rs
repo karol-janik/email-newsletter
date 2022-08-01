@@ -4,8 +4,6 @@ use std::net::TcpListener;
 
 use crate::routers::health_check::health_check;
 use crate::routers::subscriptions::subscribe;
- 
-
 
 pub fn run(listener: TcpListener) -> Result<Server, std::io::Error> {
     let server = HttpServer::new(|| {
