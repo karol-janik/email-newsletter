@@ -8,5 +8,6 @@ pub struct User {
 }
 
 pub async fn subscribe(_user: web::Form<User>) -> HttpResponse {
+    println!("{}-{}", _user.name, _user.email);
     HttpResponse::Ok().finish()
 }
